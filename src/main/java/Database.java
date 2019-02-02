@@ -37,7 +37,7 @@ public class Database {
     private Connection connectToDataBase() throws IOException, ClassNotFoundException, SQLException {
         Properties properties = new Properties();
         FileInputStream fis = null;
-        fis = new FileInputStream("D:\\Учёба\\3 курс\\2 сем\\АиПОС\\POP3\\POP3server\\src\\main\\resources\\database.properties");
+        fis = new FileInputStream("~/bsuir/3/AiPOSiZI/POP3server/src/main/resources/database.properties");
         properties.load(fis);
         Class.forName(properties.getProperty("db_driver_class"));
         connection = DriverManager.getConnection(properties.getProperty("url"),
