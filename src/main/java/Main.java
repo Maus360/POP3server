@@ -1,5 +1,14 @@
-public class Main {
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+
+public class Main extends Application{
     public static void main(String[] args) {
-        Database database = new Database();
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        Window window = new Window(stage);
     }
 }
