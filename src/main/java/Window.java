@@ -13,4 +13,8 @@ public class Window {
         stage.setScene(new Scene(root, 640, 480));
         stage.show();
     }
+
+    void print(String string){
+
+    }
 }
