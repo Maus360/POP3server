@@ -128,7 +128,7 @@ public class CommandInterpreter {
         }
 
         return "+OK " + database.numMessages(username, false) + " "
-                + database.sizeOfMaildrop(username);
+                + database.getMaildropSize(username);
     }
 
     private String commandLIST(String input, String[] cmd) {
@@ -141,9 +141,9 @@ public class CommandInterpreter {
         }
 
         if (cmd.length == 1) {
-            int numMessages = database.numMessages(username, true);
-            String out = "+OK " + database.numMessages(username, false) + " ("
-                    + database.sizeOfMaildrop(username) + ")\r\n";
+            int numMessages = database.getNumberOfMessages(username, true);
+            String out = "+OK " + database.getNumberOfMessages(username, false) + " ("
+                    + database.getMaildropSize(username) + ")\r\n";
             for (int i = 1; i <= numMessages; i++) {
                 if (!database.messageMarked(username, i)) {
                     out += i + " " + database.sizeOfMessage(username, i) + "\r\n";
@@ -172,11 +172,11 @@ public class CommandInterpreter {
         }
 
         /* Delete marked messages */
-        int numMessagesBeforeDelete = database.numMessages(username, true);
-        int n = database.deleteMarkedMessages(username);
+        int numMessagesBeforeDelete = database.getNumberOfMessages(username, true);
+        int n = database.deleteMarkedMails(username);
 
         /* Check how many messages were deleted */
-        if (n == (numMessagesBeforeDelete - database.numMessages(username, true))) {
+        if (n == (numMessagesBeforeDelete - database.getNumberOfMessages(username, true))) {
             database.setMaildropLocked(username, false);
             return "+OK " + n + " messages deleted";
         } else {
