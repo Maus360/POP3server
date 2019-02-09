@@ -38,7 +38,7 @@ public class CommandInterpreter {
         input = input.replaceAll("[\r\n]+$", "");
         String[] cmdArgs = input.split(" ", 2);
         String in = " " + input;
-
+        cmdArgs[0].toUpperCase();
         switch (cmdArgs[0].toUpperCase()) {
             case "USER":
                 return commandUSER(in, cmdArgs);
