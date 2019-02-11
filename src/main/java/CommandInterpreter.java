@@ -127,7 +127,7 @@ public class CommandInterpreter {
             return INCORRECT_NUM_ARGS + input;
         }
 
-        return "+OK " + database.numMessages(username, false) + " "
+        return "+OK " + database.getNumberOfMessages(username, false) + " "
                 + database.getMaildropSize(username);
     }
 

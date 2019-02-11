@@ -10,4 +10,11 @@ public class TestDatabase {
         assertEquals(true, database.userExists("admin@mail.com"));
         assertEquals(false, database.userExists("chel@mail.com"));
     }
+
+    @Test
+    public void testGetMailDropSize(){
+        Database database = new Database();
+
+        assertEquals(81, database.getMaildropSize("bob@mail.com"));
+    }
 }
