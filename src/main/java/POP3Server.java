@@ -9,11 +9,13 @@ public class POP3Server {
     private static final String ERROR_INVALID_TIMEOUT = "An invalid timeout was specified. Timeout must be greater than zero.";
     private static final String ERROR_UNABLE_TO_ESTABLISH_SOCKET = "An error occurred while establishing a socket or thread.";
     private static final int ERROR_CODE = 1;
+    private Window window;
     private int port;
     private int timeout;
     private boolean serverRunning;
 
-    public POP3Server(int port, int timeout) throws IllegalArgumentException{
+    public POP3Server(int port, int timeout, Window window) throws IllegalArgumentException{
+        this.window = window;
         this.port = port;
         this.timeout = timeout;
 
@@ -40,7 +42,7 @@ public class POP3Server {
                  * thread isn't needed as the Garbage Collector will clean it up
                  * after the client quits or the session times out.
                  */
-                new ServerThread(socket.accept(), timeout).start();
+                new ServerThread(socket.accept(), timeout, window).start();
             }
         } catch (IOException | SecurityException | IllegalBlockingModeException
                 | IllegalArgumentException ex) {

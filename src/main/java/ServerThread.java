@@ -13,17 +13,18 @@ public class ServerThread extends Thread {
     private static final String SERVER_WELCOME = "+OK POP3 server ready";
     private static final String ERROR_STREAM = "Unable to open or close the network stream.";
     private static final String ERROR_SOCKET_STREAM_CLOSE = "Unable to close a socket or stream.";
+    private Window window;
 
     private Socket socket;
     private InputStreamReader streamReader;
     private PrintWriter out;
     private BufferedReader in;
     private CommandInterpreter interpreter;
-    private Window window;
 
-    public ServerThread(Socket socket, int timeout) throws SocketException {
+    public ServerThread(Socket socket, int timeout, Window window) throws SocketException {
         super("Pop3ServerThread <" + socket.getInetAddress() + ">");
 
+        this.window = window;
         this.socket = socket;
         interpreter = new CommandInterpreter();
         this.socket.setSoTimeout(timeout * 1000);

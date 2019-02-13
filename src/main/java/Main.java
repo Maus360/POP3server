@@ -30,7 +30,7 @@ public class Main extends Application{
             }*/
 
             /* Run the server */
-            POP3Server server = new POP3Server(port, timeout);
+            POP3Server server = new POP3Server(port, timeout, window);
             server.run();
         } catch (NumberFormatException e) {
             System.err.println(ERROR_INVALID_ARGUMENT);
