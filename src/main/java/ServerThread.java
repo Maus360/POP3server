@@ -19,6 +19,7 @@ public class ServerThread extends Thread {
     private PrintWriter out;
     private BufferedReader in;
     private CommandInterpreter interpreter;
+    private Window window;
 
     public ServerThread(Socket socket, int timeout) throws SocketException {
         super("Pop3ServerThread <" + socket.getInetAddress() + ">");
@@ -41,10 +42,13 @@ public class ServerThread extends Thread {
             String input, output;
 
             out.println(SERVER_WELCOME);
+            window.print(SERVER_WELCOME);
 
             while ((input = in.readLine()) != null) {
+                window.print(input);
                 output = interpreter.handleInput(input);
                 out.println(output);
+                window.print(output);
 
                 if (input.startsWith("QUIT")) {
                     break;
