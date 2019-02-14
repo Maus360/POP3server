@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `pop3db`.`user_credentials` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
+  `locked` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -64,9 +65,9 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `pop3db`;
-INSERT INTO `pop3db`.`user_credentials` (`id`, `email`, `password`) VALUES (1, 'admin@mail.com', 'qwerty123');
-INSERT INTO `pop3db`.`user_credentials` (`id`, `email`, `password`) VALUES (2, 'bob@mail.com', 'hellobob');
-INSERT INTO `pop3db`.`user_credentials` (`id`, `email`, `password`) VALUES (3, 'someone@mail.com', 'hellosomeone');
+INSERT INTO `pop3db`.`user_credentials` (`id`, `email`, `password`, `locked`) VALUES (1, 'admin@mail.com', 'qwerty123', 0);
+INSERT INTO `pop3db`.`user_credentials` (`id`, `email`, `password`, `locked`) VALUES (2, 'bob@mail.com', 'hellobob', 0);
+INSERT INTO `pop3db`.`user_credentials` (`id`, `email`, `password`, `locked`) VALUES (3, 'someone@mail.com', 'hellosomeone', 0);
 
 COMMIT;
 
