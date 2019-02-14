@@ -15,10 +15,14 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage) throws Exception {
-        Window window = new Window(stage);
-        int port = 110, timeout = 1000;
+        Window window = new Window();
+        stage.setTitle("POP3server");
+        stage.setScene(window.getScene());
+        stage.show();
+        new Thread(() -> {
+            int port = 11000, timeout = 1000;
 
-        try {
+            try {
             /*if (args.length == 1) {
                 port = Integer.parseInt(args[0]);
             } else if (args.length == 2) {
@@ -29,15 +33,18 @@ public class Main extends Application{
                 System.exit(ERROR_STATUS);
             }*/
 
-            /* Run the server */
-            POP3Server server = new POP3Server(port, timeout, window);
-            server.run();
-        } catch (NumberFormatException e) {
-            System.err.println(ERROR_INVALID_ARGUMENT);
-            System.exit(ERROR_STATUS);
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-            System.exit(ERROR_STATUS);
-        }
+                /* Run the server */
+
+
+                POP3Server server = new POP3Server(port, timeout, window);
+                server.run();
+            } catch (NumberFormatException e) {
+                System.err.println(ERROR_INVALID_ARGUMENT);
+                System.exit(ERROR_STATUS);
+            } catch (IllegalArgumentException e) {
+                System.err.println(e.getMessage());
+                System.exit(ERROR_STATUS);
+            }
+        }).start();
     }
 }
