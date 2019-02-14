@@ -43,13 +43,13 @@ public class ServerThread extends Thread {
             String input, output;
 
             out.println(SERVER_WELCOME);
-            window.print(SERVER_WELCOME);
+            window.print("Server to [" + socket.getInetAddress() + "]: " + SERVER_WELCOME);
 
             while ((input = in.readLine()) != null) {
-                window.print(input);
+                window.print("[" + socket.getInetAddress() + "] to Server: " + input);
                 output = interpreter.handleInput(input);
                 out.println(output);
-                window.print(output);
+                window.print("Server to [" + socket.getInetAddress() + "]: " + output);
 
                 if (input.startsWith("QUIT")) {
                     break;

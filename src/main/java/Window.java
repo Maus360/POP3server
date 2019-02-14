@@ -1,17 +1,25 @@
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 public class Window {
-    private StackPane root = new StackPane();
+
     private TextArea chat = new TextArea();
-    Window(Stage stage){
-        stage.setTitle("POP3server");
+    private Scene scene;
+
+    Window(){
+        scene = new Scene(this.getContent(), 640, 480);
+    }
+
+    public Scene getScene(){
+        return scene;
+    }
+
+    public StackPane getContent(){
+        StackPane root = new StackPane();
         chat.setEditable(false);
         root.getChildren().add(chat);
-        stage.setScene(new Scene(root, 640, 480));
-        stage.show();
+        return root;
     }
 
     void print(String string){
