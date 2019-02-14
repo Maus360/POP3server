@@ -90,7 +90,6 @@ public class Database {
     }
 
     public boolean userExists(String email){
-        resultSet = null;
         try {
             query = connection.prepareStatement(QUERY_USER_EXISTS);
             query.setString(1, email);
@@ -99,20 +98,10 @@ public class Database {
             System.out.println("User does not exist");
             System.out.println(e.getMessage());
         }
-        finally {
-            if(resultSet!=null){
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
         return false;
     }
 
     public boolean passwordCorrect(String email, String password){
-        resultSet = null;
         if (userExists(email)){
             try {
                 query = connection.prepareStatement(QUERY_PASSWORD_CORRECT);
@@ -123,21 +112,11 @@ public class Database {
                 System.out.println("Password is not correct");
                 System.out.println(e.getMessage());
             }
-            finally {
-                if(resultSet!=null){
-                    try {
-                        resultSet.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
         }
         return false;
     }
 
     public int getMaildropSize(String email){
-        resultSet = null;
         try {
             PreparedStatement maildropSize = connection.prepareStatement(QUERY_MAILDROP_SIZE);
             maildropSize.setString(1, email);
@@ -149,20 +128,10 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        finally {
-            if(resultSet!=null){
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
         return 0;
     }
 
     public int getNumberOfMessages(String email, boolean deleted){
-        resultSet = null;
         try {
             query = connection.prepareStatement(deleted ? QUERY_NUM_OF_MARKED_MAILS : QUERY_NUM_OF_UMMARKED_MAILS);
             query.setString(1, email);
@@ -173,15 +142,6 @@ public class Database {
             return Integer.parseInt(resultSet.getString("numMsg"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }
-        finally {
-            if(resultSet!=null){
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return 0;
     }
