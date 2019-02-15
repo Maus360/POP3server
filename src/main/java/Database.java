@@ -50,6 +50,9 @@ public class Database {
     private static final String QUERY_UPDATE_MARK = "UPDATE `mail` INNER JOIN `user_credentials` " +
             "ON `mail`.`user_credentials_id` = `user_credentials`.`id` SET `markedForDeletion` = ? " +
             "WHERE `user_credentials`.`email` = ? AND `mail`.`id` = ?";
+    private static final String QUERY_MESSAGE_UIDL = "SELECT `uidl` FROM (SELECT *, @rowNum := @rowNum + 1 rowNum FROM " +
+            "`mail` NATURAL JOIN `user_credentials`, (SELECT @rowNum := 0) AS m WHERE `email` = ? ORDER BY " +
+            "`mail`.`id`) AS idTable WHERE `rowNum` = ?;";
 
     public Database() {
         try {
@@ -258,6 +261,22 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getUIDL(String email, int id){
+        try {
+            query = connection.prepareStatement(QUERY_MESSAGE_UIDL);
+            query.setString(1, email);
+            query.setInt(2, id);
+
+            resultSet = query.executeQuery();
+            if (resultSet.next()){
+                return resultSet.getString(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void close(){
