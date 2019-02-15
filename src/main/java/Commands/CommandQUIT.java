@@ -19,7 +19,7 @@ public class CommandQUIT extends Command {
             return QUIT_OK + input;
         } else {
             this.state = State.UPDATE;
-            return performUpdate() + input;
+            return performUpdate(username, this.state) + input;
         }
     }
 

@@ -32,7 +32,7 @@ public abstract class Command {
     public Command(Database database){
         this.database = database;
     }
-    String performUpdate() {
+    String performUpdate(String username, State state) {
         if (state != State.UPDATE) {
             return "-ERR cannot delete outside of UPDATE state";
         }
