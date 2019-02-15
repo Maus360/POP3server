@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentMap;
 
 public class CommandInterpreter {
     private static final String INVALID_COMMAND = "-ERR invalid command";
-    static final String QUIT_ERROR = "-ERR some messages were not deleted";
 
     private State state;
     private Database database;
@@ -33,6 +32,7 @@ public class CommandInterpreter {
         methods.put("DELE", new CommandDELE(database));
         methods.put("RSET", new CommandRSET(database));
         methods.put("TOP", new CommandTOP(database));
+        methods.put("UIDL", new CommandUIDL(database));
     }
 
     public String getUsername() {
