@@ -31,18 +31,12 @@ public class CommandInterpreter {
         methods.put("NOOP", new CommandNOOP(database));
         methods.put("RETR", new CommandRETR(database));
         methods.put("DELE", new CommandDELE(database));
+        methods.put("RSET", new CommandRSET(database));
+        methods.put("TOP", new CommandTOP(database));
     }
 
     public String getUsername() {
         return username;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public Database getDatabase() {
-        return database;
     }
 
     public String executeCommand(Command command, String in, String[] cmdArgs){
