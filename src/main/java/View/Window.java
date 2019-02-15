@@ -1,3 +1,5 @@
+package View;
+
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
@@ -7,7 +9,7 @@ public class Window {
     private TextArea chat = new TextArea();
     private Scene scene;
 
-    Window(){
+    public Window(){
         scene = new Scene(this.getContent(), 640, 480);
     }
 
@@ -22,7 +24,7 @@ public class Window {
         return root;
     }
 
-    void print(String string){
+    public void print(String string){
         chat.setEditable(true);
         chat.setText(chat.getText() + "\n" + string);
         chat.setEditable(false);

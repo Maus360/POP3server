@@ -1,3 +1,8 @@
+package Controller;
+
+import Model.Database;
+import View.Window;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.nio.channels.IllegalBlockingModeException;
@@ -38,7 +43,7 @@ public class POP3Server {
         try (ServerSocket socket = new ServerSocket(port)) {
             while (serverRunning) {
                 /*
-                 * Create and start a new ServerThread. A reference to the
+                 * Create and start a new Controller.ServerThread. A reference to the
                  * thread isn't needed as the Garbage Collector will clean it up
                  * after the client quits or the session times out.
                  */

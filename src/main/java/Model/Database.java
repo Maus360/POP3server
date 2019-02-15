@@ -1,3 +1,5 @@
+package Model;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,7 +8,7 @@ import java.util.Properties;
 
 public class Database {
 
-    private final String PROPERTIES_PATH = "E:\\Учёба\\3 курс\\2 сем\\АиПОС\\POP3\\POP3server\\src\\main\\resources\\database.properties";
+    private final String PROPERTIES_PATH = "/home/maus/bsuir/3/AiPOSiZI/POP3server/src/main/resources/database.properties";
     private Connection connection;
     private ResultSet resultSet;
     private PreparedStatement query;

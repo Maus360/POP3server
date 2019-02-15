@@ -1,3 +1,5 @@
+import Controller.POP3Server;
+import View.Window;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -23,19 +25,6 @@ public class Main extends Application{
             int port = 11000, timeout = 1000;
 
             try {
-            /*if (args.length == 1) {
-                port = Integer.parseInt(args[0]);
-            } else if (args.length == 2) {
-                port = Integer.parseInt(args[0]);
-                timeout = Integer.parseInt(args[1]);
-            } else {
-                System.err.println(ERROR_INVALID_NUMBER_OF_ARGUMENTS);
-                System.exit(ERROR_STATUS);
-            }*/
-
-                /* Run the server */
-
-
                 POP3Server server = new POP3Server(port, timeout, window);
                 server.run();
             } catch (NumberFormatException e) {
