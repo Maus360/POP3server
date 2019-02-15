@@ -51,7 +51,7 @@ public class ServerThread extends Thread {
                 out.println(output);
                 window.print("Server to [" + socket.getInetAddress() + "]: " + output);
 
-                if (input.startsWith("QUIT")) {
+                if (input.toUpperCase().startsWith("QUIT")) {
                     break;
                 }
             }

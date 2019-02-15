@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.function.BiFunction;
+
 public class CommandInterpreter {
     private static final String INVALID_IN_STATE = "-ERR command invalid in the current state";
     private static final String INVALID_ARG_TYPE = "-ERR invalid argument type";
@@ -23,6 +26,7 @@ public class CommandInterpreter {
     private State state;
     private Database database;
     private String username;
+    private HashMap<String, BiFunction<String, String[], String>> methods = new HashMap<>();
 
     private enum State {
         AUTHORIZATION, TRANSACTION, UPDATE
@@ -32,6 +36,17 @@ public class CommandInterpreter {
         state = State.AUTHORIZATION;
         database = Database.getInstance();
         username = "";
+        methods.put("USER", this::commandUSER);
+        methods.put("PASS", this::commandPASS);
+        methods.put("QUIT", this::commandQUIT);
+        methods.put("STAT", this::commandSTAT);
+        methods.put("LIST", this::commandLIST);
+        methods.put("RETR", this::commandRETR);
+        methods.put("DELE", this::commandDELE);
+        methods.put("NOOP", this::commandNOOP);
+
+
+
     }
 
     public String handleInput(String input) {
@@ -39,27 +54,13 @@ public class CommandInterpreter {
         String[] cmdArgs = input.split(" ", 2);
         String in = " " + input;
         cmdArgs[0].toUpperCase();
-        switch (cmdArgs[0].toUpperCase()) {
-            case "USER":
-                return commandUSER(in, cmdArgs);
-            case "PASS":
-                return commandPASS(in, cmdArgs);
-            case "QUIT":
-                return commandQUIT(in, cmdArgs);
-            case "STAT":
-                return commandSTAT(in, cmdArgs);
-            case "LIST":
-                return commandLIST(in, cmdArgs);
-            case "RETR":
-                return commandRETR(in, cmdArgs);
-            case "DELE":
-                return commandDELE(in, cmdArgs);
-            case "NOOP":
-                return commandNOOP(in, cmdArgs);
-            default:
-                return INVALID_COMMAND + in;
+        BiFunction<String, String[], String> result = methods.get(cmdArgs[0].toUpperCase());
+        if (result == null) {
+            return INVALID_COMMAND + in;
         }
+        return result.apply(in,cmdArgs);
     }
+
     private String commandUSER(String input, String[] cmd) {
         if (state != State.AUTHORIZATION) {
             return INVALID_IN_STATE + input;
