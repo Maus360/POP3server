@@ -77,8 +77,9 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `pop3db`;
-INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`) VALUES (1, 'test mail from some human', 0, 1);
-INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`) VALUES (2, 'another test mail which is longer then the other one and it is from another human', 0, 2);
+INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`) VALUES (1, 'Test Message\n\ntest mail from some human', 0, 1);
+INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`) VALUES (2, 'Another Test for Bob\n\nanother test mail which is longer \nthen the other one and it is from another human', 0, 2);
+INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`) VALUES (3, 'The Truth\n\nlena and max are doing \na \npure masterpiece', 0, 2);
 
 COMMIT;
 
