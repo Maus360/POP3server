@@ -34,6 +34,10 @@ public class TestDatabase {
         assertEquals(1, database.getNumberOfMessages("bob@mail.com", false));
     }
 
+    @Test
+    public void testGetUIDL(){
+        assertEquals("267c6c43", database.getUIDL("admin@mail.com", 1));
+    }
 
 
 }

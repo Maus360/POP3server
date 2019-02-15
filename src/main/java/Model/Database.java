@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class Database {
 
-    private final String PROPERTIES_PATH = "/home/maus/bsuir/3/AiPOSiZI/POP3server/src/main/resources/database.properties";
+    private final String PROPERTIES_PATH = "E:\\Учёба\\3 курс\\2 сем\\АиПОС\\POP3\\POP3server\\src\\main\\resources\\database.properties";
     private Connection connection;
     private ResultSet resultSet;
     private PreparedStatement query;
@@ -52,7 +52,7 @@ public class Database {
     private static final String QUERY_UPDATE_MARK = "UPDATE `mail` INNER JOIN `user_credentials` " +
             "ON `mail`.`user_credentials_id` = `user_credentials`.`id` SET `markedForDeletion` = ? " +
             "WHERE `user_credentials`.`email` = ? AND `mail`.`id` = ?";
-    private static final String QUERY_MESSAGE_UIDL = "SELECT `uidl` FROM (SELECT *, @rowNum := @rowNum + 1 rowNum FROM " +
+    private static final String QUERY_MESSAGE_UIDL = "SELECT `UIDL` FROM (SELECT *, @rowNum := @rowNum + 1 rowNum FROM " +
             "`mail` NATURAL JOIN `user_credentials`, (SELECT @rowNum := 0) AS m WHERE `email` = ? ORDER BY " +
             "`mail`.`id`) AS idTable WHERE `rowNum` = ?;";
 

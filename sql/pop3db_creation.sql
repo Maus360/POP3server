@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `pop3db`.`mail` (
   `content` VARCHAR(500) NULL,
   `markedForDeletion` INT NULL DEFAULT 0,
   `user_credentials_id` INT NOT NULL,
+  `UIDL` VARCHAR(500) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_mail_user_credentials`
     FOREIGN KEY (`user_credentials_id`)
@@ -77,9 +78,9 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `pop3db`;
-INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`) VALUES (1, 'Test Message\n\ntest mail from some human', 0, 1);
-INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`) VALUES (2, 'Another Test for Bob\n\nanother test mail which is longer \nthen the other one and it is from another human', 0, 2);
-INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`) VALUES (3, 'The Truth\n\nlena and max are doing \na \npure masterpiece', 0, 2);
+INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`, `UIDL`) VALUES (1, 'Test Message\n\ntest mail from some human', 0, 1, '267c6c43');
+INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`, `UIDL`) VALUES (2, 'Another Test for Bob\n\nanother test mail which is longer \nthen the other one and it is from another human', 0, 2, 'b98727df');
+INSERT INTO `pop3db`.`mail` (`id`, `content`, `markedForDeletion`, `user_credentials_id`, `UIDL`) VALUES (3, 'The Truth\n\nlena and max are making \na \npure masterpiece', 0, 2, 'deb3f2b1');
 
 COMMIT;
 
