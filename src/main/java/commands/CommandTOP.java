@@ -1,7 +1,7 @@
-package Commands;
+package сontroller.Commands;
 
-import Controller.CommandInterpreter.State;
-import Model.Database;
+import сontroller.CommandInterpreter.State;
+import model.Database;
 
 public class CommandTOP extends Command {
 

@@ -1,11 +1,11 @@
-package Commands;
+package сontroller.Commands;
 
-import Controller.CommandInterpreter.State;
-import Model.Database;
+import сontroller.CommandInterpreter.State;
+import model.Database;
 
-public class CommandRSET extends Command {
+public class CommandNOOP extends Command {
 
-    public CommandRSET(Database database){
+    public CommandNOOP(Database database){
         super(database);
     }
 
@@ -16,8 +16,8 @@ public class CommandRSET extends Command {
         } else if (cmd.length != 1) {
             return INCORRECT_NUM_ARGS + input;
         } else {
-            database.restoreMarked(username);
-            return RESET_OK + input;
+            return NOOP_OK + input;
         }
     }
+
 }

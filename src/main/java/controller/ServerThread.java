@@ -1,6 +1,6 @@
-package Controller;
+package сontroller;
 
-import View.Window;
+import view.Window;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,8 +63,10 @@ public class ServerThread extends Thread {
             interpreter.close();
             System.out.println("[" + socket.getInetAddress() + "] "
                     + INFO_USER_TIMEOUT);
+            e.printStackTrace();
         } catch (IOException e) {
             System.err.println(ERROR_STREAM);
+            e.printStackTrace();
         } finally {
             try {
                 streamReader.close();
@@ -73,6 +75,7 @@ public class ServerThread extends Thread {
                 socket.close();
             } catch (IOException e) {
                 System.err.println(ERROR_SOCKET_STREAM_CLOSE);
+                e.printStackTrace();
             } finally {
                 System.out.println("[" + socket.getInetAddress() + "] "
                         + INFO_USER_DISCONNECTED);

@@ -1,9 +1,8 @@
-package Controller;
-import Commands.*;
-import Model.Database;
+package сontroller;
+import commands.*;
+import model.Database;
 
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class CommandInterpreter {
     private static final String INVALID_COMMAND = "-ERR invalid command";
