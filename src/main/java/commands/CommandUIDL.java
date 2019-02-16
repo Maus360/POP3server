@@ -1,7 +1,7 @@
-package Commands;
+package commands;
 
-import Controller.CommandInterpreter.State;
-import Model.Database;
+import controller.CommandInterpreter.State;
+import model.Database;
 
 public class CommandUIDL extends Command {
 

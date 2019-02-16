@@ -1,4 +1,4 @@
-package сontroller;
+package controller;
 
 import model.Database;
 import view.Window;
@@ -46,7 +46,7 @@ public class POP3Server {
         try (ServerSocket socket = new ServerSocket(port)) {
             while (serverRunning) {
                 /*
-                 * Create and start a new сontroller.ServerThread. A reference to the
+                 * Create and start a new controller.ServerThread. A reference to the
                  * thread isn't needed as the Garbage Collector will clean it up
                  * after the client quits or the session times out.
                  */

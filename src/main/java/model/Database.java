@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class Database {
 
-    private final String PROPERTIES_PATH = "E:\\Учёба\\3 курс\\2 сем\\АиПОС\\POP3\\POP3server\\src\\main\\resources\\database.properties";
+    private final String PROPERTIES_PATH = "src/main/resources/database.properties";
     private Connection connection;
     private ResultSet resultSet;
     private PreparedStatement query;
@@ -40,15 +40,18 @@ public class Database {
     private static final String QUERY_MESSAGE_EXISTS = "SELECT * FROM `mail` INNER JOIN `user_credentials` " +
             "ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE `user_credentials`.`email` = ? AND " +
             "`mail`.`id` = ?";
-    private static final String QUERY_MESSAGE_CONTENT = "SELECT `content` FROM `mail` INNER JOIN `user_credentials` " +
-            "ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE `user_credentials`.`email` = ? AND " +
-            "`mail`.`id` = ?";
-    private static final String QUERY_MESSAGE_SIZE = "SELECT LENGTH(content) AS `size_of_mail` FROM `mail` INNER JOIN " +
+    private static final String QUERY_MESSAGE_CONTENT = "select `content` from (select ROW_NUMBER() " +
+            "OVER(ORDER BY `mail`.`id` ASC) as rowN, `content` FROM `mail` inner join `user_credentials` ON " +
+            "`user_credentials`.`id` = `mail`.`user_credentials_id` WHERE `user_credentials`.`email` = ?) as idTable " +
+            "where `idTable`.`rowN` = ?";
+    private static final String QUERY_MESSAGE_SIZE = "select LENGTH(content) AS `size_of_mail` from " +
+            "(select ROW_NUMBER() OVER(ORDER BY `mail`.`id` ASC) as rowN, `content` FROM `mail` inner join " +
             "`user_credentials` ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE " +
-            "`user_credentials`.`email` = ? AND `mail`.`id` = ?";
-    private static final String QUERY_MESSAGE_MARKED = "SELECT `markedForDeletion` FROM `mail` INNER JOIN `user_credentials` " +
-            "ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE `user_credentials`.`email` = ? " +
-            "AND `mail`.`id` = ? AND `mail`.`markedForDeletion` = 1";
+            "`user_credentials`.`email` = ?) as idTable where `idTable`.`rowN` = ?";
+    private static final String QUERY_MESSAGE_MARKED = "select `markedForDeletion` from " +
+            "(select ROW_NUMBER() OVER(ORDER BY `mail`.`id` ASC) as rowN, `markedForDeletion` FROM `mail` inner join " +
+            "`user_credentials` ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE " +
+            "`user_credentials`.`email` = ? AND `mail`.`markedForDeletion` = 1) as idTable where `idTable`.`rowN` = ?;";
     private static final String QUERY_UPDATE_MARK = "UPDATE `mail` INNER JOIN `user_credentials` " +
             "ON `mail`.`user_credentials_id` = `user_credentials`.`id` SET `markedForDeletion` = ? " +
             "WHERE `user_credentials`.`email` = ? AND `mail`.`id` = ?";
@@ -67,10 +70,13 @@ public class Database {
             System.out.println("SQLException: " + e.getMessage());
             System.out.println("SQLState: " + e.getSQLState());
             System.out.println("VendorError: " + e.getErrorCode());
+            e.printStackTrace();
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
+            e.printStackTrace();
         } catch (IOException e) {
             System.out.println("Error loading properties file");
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -102,6 +108,7 @@ public class Database {
         } catch (SQLException e) {
             System.out.println("User does not exist");
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return false;
     }
@@ -116,6 +123,7 @@ public class Database {
             } catch (SQLException e) {
                 System.out.println("Password is not correct");
                 System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }
         return false;
@@ -132,6 +140,7 @@ public class Database {
             return resultSet.getInt("mailDropSize");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return 0;
     }
@@ -147,6 +156,7 @@ public class Database {
             return Integer.parseInt(resultSet.getString("numMsg"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return 0;
     }

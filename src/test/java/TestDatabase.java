@@ -1,6 +1,6 @@
 import static org.junit.Assert.assertEquals;
 
-import Model.Database;
+import model.Database;
 import org.junit.Test;
 
 import java.sql.SQLException;

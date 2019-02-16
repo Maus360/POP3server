@@ -1,6 +1,6 @@
-package сontroller.Commands;
+package commands;
 
-import сontroller.CommandInterpreter.State;
+import controller.CommandInterpreter.State;
 import model.Database;
 
 public class CommandUSER extends Command {

@@ -1,4 +1,4 @@
-package сontroller;
+package controller;
 
 import view.Window;
 
