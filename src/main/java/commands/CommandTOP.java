@@ -1,6 +1,6 @@
-package сontroller.Commands;
+package commands;
 
-import сontroller.CommandInterpreter.State;
+import controller.CommandInterpreter.State;
 import model.Database;
 
 public class CommandTOP extends Command {
@@ -56,7 +56,7 @@ public class CommandTOP extends Command {
             body = "";
 
             /* Reconstruct the body for n lines */
-            for (int i = 0; i < tmp.length - 1; i++) {
+            for (int i = 0; i <= tmp.length - 1; i++) {
                 if (n == i) break;
                 body += "\n" + tmp[i];
             }

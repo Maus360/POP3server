@@ -1,6 +1,6 @@
-package сontroller.Commands;
+package commands;
 
-import сontroller.CommandInterpreter.State;
+import controller.CommandInterpreter.State;
 import model.Database;
 
 public abstract class Command {
@@ -9,7 +9,6 @@ public abstract class Command {
     static final String TOO_MANY_ARGS = "-ERR too many command arguments";
     static final String TOO_FEW_ARGS = "-ERR too few command arguments";
     static final String INCORRECT_NUM_ARGS = "-ERR incorrect number of arguments";
-    static final String INVALID_COMMAND = "-ERR invalid command";
     static final String USER_OK = "+OK found user account";
     static final String USER_LOCKED = "-ERR the maildrop is currently locked";
     static final String USER_NOT_FOUND = "-ERR user not found";

@@ -1,4 +1,4 @@
-package сontroller;
+package controller;
 import commands.*;
 import model.Database;
 
@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 public class CommandInterpreter {
     private static final String INVALID_COMMAND = "-ERR invalid command";
-    static final String QUIT_ERROR = "-ERR some messages were not deleted";
 
     private State state;
     private Database database;
