@@ -34,8 +34,9 @@ public class Database {
     private static final String QUERY_RESTORE_MARK_FOR_DELETION = "UPDATE `mail`, `user_credentials` SET " +
             "`markedForDeletion` = 1 WHERE `markedForDeletion` = 0 AND `mail`.`user_credentials_id` = `user_credentials`.`id` " +
             "AND `user_credentials`.`email` = ?;";
-    private static final String QUERY_MESSAGE_EXISTS = "SELECT * FROM `mail`, `user_credentials` WHERE " +
-            "`user_credentials`.`id` = `mail`.`user_credentials_id` AND `user_credentials`.`email` = ? AND `mail`.`id` = ?";
+    private static final String QUERY_MESSAGE_EXISTS = "SELECT * from (select ROW_NUMBER() OVER(ORDER BY `mail`.`id` ASC) " +
+            "as rowN FROM `mail`, `user_credentials` WHERE `user_credentials`.`id` = `mail`.`user_credentials_id` AND " +
+            "`user_credentials`.`email` = ?) as idTable where `idTable`.`rowN` = ?";
     private static final String QUERY_MESSAGE_CONTENT = "select `content` from (select ROW_NUMBER() " +
             "OVER(ORDER BY `mail`.`id` ASC) as rowN, `mail`.`content` FROM `mail`, `user_credentials` where " +
             "`user_credentials`.`id` = `mail`.`user_credentials_id` AND `user_credentials`.`email` = ?) as idTable " +

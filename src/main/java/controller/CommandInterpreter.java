@@ -30,6 +30,7 @@ public class CommandInterpreter {
         methods.put("RETR", new CommandRETR(database));
         methods.put("DELE", new CommandDELE(database));
         methods.put("RSET", new CommandRSET(database));
+        methods.put("UIDL", new CommandUIDL(database));
         methods.put("TOP", new CommandTOP(database));
     }
 
