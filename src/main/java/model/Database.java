@@ -18,46 +18,43 @@ public class Database {
     private static final String QUERY_USER_EXISTS = "SELECT `email` FROM `user_credentials` WHERE `email` = ?";
     private static final String QUERY_PASSWORD_CORRECT = "SELECT `password` FROM `user_credentials` WHERE `email` = ? AND " +
             "`password` = ?";
-    private static final String QUERY_MAILDROP_SIZE = "SELECT SUM(LENGTH(content)) AS `mailDropSize` FROM `mail` " +
-            "INNER JOIN `user_credentials` ON `mail`.`user_credentials_id` = `user_credentials`.`id` " +
-            "WHERE `email` = ? AND `markedForDeletion` = 0";
-    private static final String QUERY_NUM_OF_MARKED_MAILS = "SELECT COUNT(*) AS `numMsg` FROM `mail` INNER JOIN " +
-            "`user_credentials` ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE `email` = ? AND " +
-            "`markedForDeletion` = 1";
-    private static final String QUERY_NUM_OF_UMMARKED_MAILS = "SELECT COUNT(*) AS `numMsg` FROM `mail` INNER JOIN " +
-            "`user_credentials` ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE `email` = ? AND " +
-            "`markedForDeletion` = 0";
-    private static final String QUERY_DELETE_MARKED_MAILS = "DELETE `mail`.* FROM `mail` LEFT JOIN `user_credentials`" +
-            "ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE `user_credentials`.`email` = ? " +
+    private static final String QUERY_MAILDROP_SIZE = "SELECT SUM(LENGTH(content)) AS `mailDropSize` FROM `mail`, " +
+            "`user_credentials` WHERE `mail`.`user_credentials_id` = `user_credentials`.`id` AND `email` = ? " +
+            "AND `markedForDeletion` = 0";
+    private static final String QUERY_NUM_OF_MARKED_MAILS = "SELECT COUNT(*) AS `numMsg` FROM `mail`, `user_credentials` " +
+            "WHERE `user_credentials`.`id` = `mail`.`user_credentials_id` AND `email` = ? AND `markedForDeletion` = 1";
+    private static final String QUERY_NUM_OF_UMMARKED_MAILS = "SELECT COUNT(*) AS `numMsg` FROM `mail`, `user_credentials` " +
+            "WHERE `user_credentials`.`id` = `mail`.`user_credentials_id` AND `email` = ? AND `markedForDeletion` = 0";
+    private static final String QUERY_DELETE_MARKED_MAILS = "DELETE `mail`.* FROM `mail`, `user_credentials` WHERE " +
+            "`user_credentials`.`id` = `mail`.`user_credentials_id` AND `user_credentials`.`email` = ? " +
             "AND `mail`.`markedForDeletion` = 1";
     private static final String QUERY_UPDATE_LOCK = "UPDATE `user_credentials` SET `locked` = ? WHERE `email` = ?";
-    private static final String QUERY_MAILDROP_LOCKED = "SELECT `markedForDeletion` FROM `mail` INNER JOIN " +
-            "`user_credentials` ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE `email` = ? AND " +
-            "`markedForDeletion` = 1";
-    private static final String QUERY_RESTORE_MARK_FOR_DELETION = "UPDATE `mail` INNER JOIN `user_credentials` " +
-            "ON `mail`.`user_credentials_id` = `user_credentials`.`id` SET `markedForDeletion` = 0 WHERE `markedForDeletion` = 1 " +
-            "AND `user_credentials`.`email` = ?";
-    private static final String QUERY_MESSAGE_EXISTS = "SELECT * FROM `mail` INNER JOIN `user_credentials` " +
-            "ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE `user_credentials`.`email` = ? AND " +
-            "`mail`.`id` = ?";
+    private static final String QUERY_MAILDROP_LOCKED = "SELECT `markedForDeletion` FROM `mail`, `user_credentials` " +
+            "WHERE `user_credentials`.`id` = `mail`.`user_credentials_id` AND `email` = ? AND `markedForDeletion` = 1";
+    private static final String QUERY_RESTORE_MARK_FOR_DELETION = "UPDATE `mail`, `user_credentials` SET " +
+            "`markedForDeletion` = 1 WHERE `markedForDeletion` = 0 AND `mail`.`user_credentials_id` = `user_credentials`.`id` " +
+            "AND `user_credentials`.`email` = ?;";
+    private static final String QUERY_MESSAGE_EXISTS = "SELECT * FROM `mail`, `user_credentials` WHERE " +
+            "`user_credentials`.`id` = `mail`.`user_credentials_id` AND `user_credentials`.`email` = ? AND `mail`.`id` = ?";
     private static final String QUERY_MESSAGE_CONTENT = "select `content` from (select ROW_NUMBER() " +
-            "OVER(ORDER BY `mail`.`id` ASC) as rowN, `content` FROM `mail` inner join `user_credentials` ON " +
-            "`user_credentials`.`id` = `mail`.`user_credentials_id` WHERE `user_credentials`.`email` = ?) as idTable " +
+            "OVER(ORDER BY `mail`.`id` ASC) as rowN, `mail`.`content` FROM `mail`, `user_credentials` where " +
+            "`user_credentials`.`id` = `mail`.`user_credentials_id` AND `user_credentials`.`email` = ?) as idTable " +
             "where `idTable`.`rowN` = ?";
     private static final String QUERY_MESSAGE_SIZE = "select LENGTH(content) AS `size_of_mail` from " +
-            "(select ROW_NUMBER() OVER(ORDER BY `mail`.`id` ASC) as rowN, `content` FROM `mail` inner join " +
-            "`user_credentials` ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE " +
-            "`user_credentials`.`email` = ?) as idTable where `idTable`.`rowN` = ?";
+            "(select ROW_NUMBER() OVER(ORDER BY `mail`.`id` ASC) as rowN, `content` FROM `mail`, `user_credentials` WHERE " +
+            "`user_credentials`.`id` = `mail`.`user_credentials_id` AND `user_credentials`.`email` = ?) as idTable " +
+            "where `idTable`.`rowN` = ?";
     private static final String QUERY_MESSAGE_MARKED = "select `markedForDeletion` from " +
-            "(select ROW_NUMBER() OVER(ORDER BY `mail`.`id` ASC) as rowN, `markedForDeletion` FROM `mail` inner join " +
-            "`user_credentials` ON `user_credentials`.`id` = `mail`.`user_credentials_id` WHERE " +
-            "`user_credentials`.`email` = ? AND `mail`.`markedForDeletion` = 1) as idTable where `idTable`.`rowN` = ?;";
-    private static final String QUERY_UPDATE_MARK = "UPDATE `mail` INNER JOIN `user_credentials` " +
-            "ON `mail`.`user_credentials_id` = `user_credentials`.`id` SET `markedForDeletion` = ? " +
-            "WHERE `user_credentials`.`email` = ? AND `mail`.`id` = ?";
-    private static final String QUERY_MESSAGE_UIDL = "SELECT `UIDL` FROM (SELECT *, @rowNum := @rowNum + 1 rowNum FROM " +
-            "`mail` NATURAL JOIN `user_credentials`, (SELECT @rowNum := 0) AS m WHERE `email` = ? ORDER BY " +
-            "`mail`.`id`) AS idTable WHERE `rowNum` = ?;";
+            "(select ROW_NUMBER() OVER(ORDER BY `mail`.`id` ASC) as rowN, `markedForDeletion` FROM `mail`, `user_credentials` " +
+            "WHERE `user_credentials`.`id` = `mail`.`user_credentials_id` AND `user_credentials`.`email` = ? AND " +
+            "`mail`.`markedForDeletion` = 1) as idTable where `idTable`.`rowN` = ?;";
+    private static final String QUERY_UPDATE_MARK = "UPDATE `mail` AS `m` JOIN (SELECT ROW_NUMBER() OVER(ORDER BY " +
+            "`mail`.`id` ASC) as rownum, `mail`.`id`, `mail`.`content` FROM `mail` INNER JOIN `user_credentials` ON " +
+            "`mail`.`user_credentials_id` = `user_credentials`.`id` WHERE `user_credentials`.`email` = ?) AS r " +
+            "ON m.id = r.id SET `markedForDeletion` = ? where r.rownum = ?;";
+    private static final String QUERY_MESSAGE_UIDL = "select `UIDL` from (select ROW_NUMBER() OVER(ORDER BY `mail`.`id` ASC) " +
+            "as rowN, `UIDL` FROM `mail`, `user_credentials` WHERE `user_credentials`.`id` = `mail`.`user_credentials_id` " +
+            "AND `user_credentials`.`email` = ?) as idTable where `idTable`.`rowN` = ?";
 
     public Database() {
         try {
@@ -266,8 +263,8 @@ public class Database {
     public void setMark(String email, int id, boolean marked) {
         try {
             query = connection.prepareStatement(QUERY_UPDATE_MARK);
-            query.setInt(1, marked ? 1 : 0);
-            query.setString(2, email);
+            query.setString(1, email);
+            query.setInt(2, marked ? 1 : 0);
             query.setInt(3, id);
             query.executeUpdate();
         } catch (SQLException e) {
