@@ -41,11 +41,6 @@ public class CommandTOP extends Command {
         } else {
             String message = database.getMessage(username, id);
 
-            /* Check for an empty message */
-            if (message.equals(null)) {
-                return "+OK\r\n.";
-            }
-
             /* Split the full message into header and body components */
             String[] tmp = message.split("\n\n", 2);
             String header = tmp[0];
