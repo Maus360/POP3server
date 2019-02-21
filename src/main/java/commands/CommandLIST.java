@@ -20,7 +20,7 @@ public class CommandLIST extends Command {
         }
 
         if (cmd.length == 1) {
-            int numMessages = database.getNumberOfMessages(username, true);
+            int numMessages = database.getNumberOfMessages(username, false);
             String out = "+OK " + database.getNumberOfMessages(username, false) + " ("
                     + database.getMaildropSize(username) + ")\r\n";
             for (int i = 1; i <= numMessages; i++) {
