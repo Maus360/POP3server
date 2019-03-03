@@ -86,6 +86,13 @@ public class Database {
         }
     }
 
+    /**
+     * Connect to database via property data of url, username, password.
+     * @return Connected driver to database
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     private Connection connectToDataBase() throws IOException, ClassNotFoundException, SQLException {
         log.info("Establishing connection to database...");
         Properties properties = new Properties();
