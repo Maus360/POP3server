@@ -19,14 +19,11 @@ public class Window {
 
     public StackPane getContent(){
         StackPane root = new StackPane();
-        chat.setEditable(false);
         root.getChildren().add(chat);
         return root;
     }
 
     public void print(String string){
-        chat.setEditable(true);
-        chat.setText(chat.getText() + "\n" + string);
-        chat.setEditable(false);
+        javafx.application.Platform.runLater(() -> chat.setText(chat.getText() + "\n" + string) );
     }
 }

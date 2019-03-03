@@ -1,5 +1,7 @@
 package model;
 
+import org.apache.log4j.Logger;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,7 +9,7 @@ import java.sql.*;
 import java.util.Properties;
 
 public class Database {
-
+    private static Logger log = Logger.getLogger(Database.class.getName());
     private final String PROPERTIES_PATH = "src/main/resources/database.properties";
     private Connection connection;
     private ResultSet resultSet;
@@ -61,26 +63,31 @@ public class Database {
         try {
             connection = connectToDataBase();
             if(!connection.isClosed()){
-                System.out.println("Connection Opened");
+                log.info("Connection Opened");
             }
         }
         catch (SQLException e){
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
+            log.error("SQLException: " + e.getMessage());
+            log.error("SQLState: " + e.getSQLState());
+            log.error("VendorError: " + e.getErrorCode());
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         } catch (FileNotFoundException e) {
-            System.out.println("File not found");
+            log.error("File not found");
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         } catch (IOException e) {
-            System.out.println("Error loading properties file");
+            log.error("Error loading properties file");
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
     }
 
     private Connection connectToDataBase() throws IOException, ClassNotFoundException, SQLException {
+        log.info("Establishing connection to database...");
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(PROPERTIES_PATH);
         properties.load(fis);
@@ -100,13 +107,15 @@ public class Database {
 
     public boolean userExists(String email){
         try {
+            log.info("Check if user exists");
             query = connection.prepareStatement(QUERY_USER_EXISTS);
             query.setString(1, email);
             return query.executeQuery().next();
         } catch (SQLException e) {
-            System.out.println("User does not exist");
+            log.error("User does not exist");
             System.out.println(e.getMessage());
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
         return false;
     }
@@ -114,14 +123,16 @@ public class Database {
     public boolean passwordCorrect(String email, String password){
         if (userExists(email)){
             try {
+                log.info("Verifying password");
                 query = connection.prepareStatement(QUERY_PASSWORD_CORRECT);
                 query.setString(1, email);
                 query.setString(2, password);
                 return query.executeQuery().next();
             } catch (SQLException e) {
-                System.out.println("Password is not correct");
+                log.error("Password is not correct");
                 System.out.println(e.getMessage());
                 e.printStackTrace();
+                log.trace(e.getStackTrace());
             }
         }
         return false;
@@ -129,32 +140,38 @@ public class Database {
 
     public int getMaildropSize(String email){
         try {
+            log.info("Getting maildrop size");
             PreparedStatement maildropSize = connection.prepareStatement(QUERY_MAILDROP_SIZE);
             maildropSize.setString(1, email);
             resultSet = maildropSize.executeQuery();
             if (!resultSet.next()){
+                log.info("No mails found in " + email + " inbox");
                 return 0;
             }
             return resultSet.getInt("mailDropSize");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
         return 0;
     }
 
     public int getNumberOfMessages(String email, boolean deleted){
         try {
+            log.info("Getting number of messages");
             query = connection.prepareStatement(deleted ? QUERY_NUM_OF_MARKED_MAILS : QUERY_NUM_OF_UMMARKED_MAILS);
             query.setString(1, email);
             resultSet = query.executeQuery();
             if (!resultSet.next()){
+                log.info("No " + (deleted ? "marked" : "unmarked") + "for deletion mails found in " + email + " inbox");
                 return 0;
             }
             return Integer.parseInt(resultSet.getString("numMsg"));
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
         return 0;
     }
@@ -162,6 +179,7 @@ public class Database {
     public int deleteMarkedMails(String email){
         int numDeleted = 0;
         try {
+            log.info("Getting the number of deleted mails");
             query = connection.prepareStatement(QUERY_DELETE_MARKED_MAILS);
             query.setString(1, email);
             query.executeUpdate();
@@ -170,56 +188,66 @@ public class Database {
             return (numDeleted != -1) ? numDeleted : 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
         return numDeleted;
     }
 
     public void setMaildropLocked(String username, boolean b) {
         try {
+            log.info("Locking " + username + "maildrop");
             query = connection.prepareStatement(QUERY_UPDATE_LOCK);
             query.setInt(1, b ? 1 : 0);
             query.setString(2, username);
             query.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
     }
 
     public boolean messageExists(String email, int id){
         try{
+            log.info("Checking if message #" + id + " exists in " + email + " inbox");
             query = connection.prepareStatement(QUERY_MESSAGE_EXISTS);
             query.setString(1, email);
             query.setInt(2, id);
             return query.executeQuery().next();
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
         return false;
     }
 
     public boolean getMaildropLocked(String email) {
         try {
+            log.info("Getting status of " + email + "maildrop");
             query = connection.prepareStatement(QUERY_MAILDROP_LOCKED);
             query.setString(1, email);
             return query.executeQuery().next();
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
         return true;
     }
 
     public void restoreMarked(String username) {
         try {
+            log.info("Restoring marked for deletion mails for " + username);
             query = connection.prepareStatement(QUERY_RESTORE_MARK_FOR_DELETION);
             query.setString(1, username);
             query.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
     }
 
     public String getMessage(String username, int id) {
         try {
+            log.info("Getting content of message #" + id);
             query = connection.prepareStatement(QUERY_MESSAGE_CONTENT);
             query.setString(1, username);
             query.setInt(2, id);
@@ -229,12 +257,14 @@ public class Database {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
         return null;
     }
 
     public int sizeOfMessage(String email, int id) {
         try {
+            log.info("Getting size of message #" + id);
             query = connection.prepareStatement(QUERY_MESSAGE_SIZE);
             query.setString(1, email);
             query.setInt(2, id);
@@ -245,24 +275,28 @@ public class Database {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
         return 0;
     }
 
     public boolean messageMarked(String email, int id) {
         try {
+            log.info("Checking if message #" + id + "marked for deletion");
             query = connection.prepareStatement(QUERY_MESSAGE_MARKED);
             query.setString(1, email);
             query.setInt(2, id);
             return query.executeQuery().next();
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
         return false;
     }
 
     public void setMark(String email, int id, boolean marked) {
         try {
+            log.info("Setting message" + (marked ? "marked" : "unmarked") + " for deletion");
             query = connection.prepareStatement(QUERY_UPDATE_MARK);
             query.setString(1, email);
             query.setInt(2, marked ? 1 : 0);
@@ -270,11 +304,13 @@ public class Database {
             query.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
     }
 
     public String getUIDL(String email, int id){
         try {
+            log.info("Getting UIDL of the message #" + id);
             query = connection.prepareStatement(QUERY_MESSAGE_UIDL);
             query.setString(1, email);
             query.setInt(2, id);
@@ -285,6 +321,7 @@ public class Database {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
         return null;
     }
@@ -296,6 +333,7 @@ public class Database {
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            log.trace(e.getStackTrace());
         }
     }
 }

@@ -1,4 +1,5 @@
 import controller.POP3Server;
+import org.apache.log4j.Logger;
 import view.Window;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Main extends Application{
+    private static Logger log = Logger.getLogger("Main");
     private final String PROPERTIES_PATH = "src/main/resources/server.properties";
     private static final String ERROR_INVALID_NUMBER_OF_ARGUMENTS = "An invalid number of arguments were specified. Usage: java Pop3Server port [timeout].";
     private static final String ERROR_INVALID_ARGUMENT = "An invalid argument was specified.";
@@ -23,6 +25,8 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage) throws Exception {
+        log.info("Starting POP3 Server");
+        log.error("Check");
         Window window = new Window();
         stage.setTitle("POP3server");
         stage.setScene(window.getScene());
@@ -33,25 +37,27 @@ public class Main extends Application{
                 POP3Server server = new POP3Server(port, TIMEOUT, window);
                 server.run();
             } catch (NumberFormatException e) {
-                System.err.println(ERROR_INVALID_ARGUMENT);
-                e.printStackTrace();
+                log.error(ERROR_INVALID_ARGUMENT);
+                log.trace(e.getStackTrace());
                 System.exit(ERROR_STATUS);
             } catch (IllegalArgumentException e) {
-                System.err.println(e.getMessage());
-                e.printStackTrace();
+                log.error(e.getMessage());
+                log.trace(e.getStackTrace());
                 System.exit(ERROR_STATUS);
             }
         }).start();
     }
 
     public int readProperties() {
+        log.info("Reading server properties");
         Properties properties = new Properties();
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(PROPERTIES_PATH);
             properties.load(fis);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Failed reading server properties");
+            log.trace(e.getStackTrace());
         }
         return Integer.parseInt(properties.getProperty("port"));
     }

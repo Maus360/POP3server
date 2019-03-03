@@ -1,10 +1,12 @@
 package controller;
 import commands.*;
 import model.Database;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 
 public class CommandInterpreter {
+    private static Logger log = Logger.getLogger(CommandInterpreter.class.getName());
     private static final String INVALID_COMMAND = "-ERR invalid command";
 
     private State state;
@@ -39,6 +41,7 @@ public class CommandInterpreter {
     }
 
     public String executeCommand(Command command, String in, String[] cmdArgs){
+        log.info("Executing " + in + "command");
         return command.execute(in, cmdArgs, state, username);
     }
 

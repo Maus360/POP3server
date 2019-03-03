@@ -1,6 +1,7 @@
 package controller;
 
 import model.Database;
+import org.apache.log4j.Logger;
 import view.Window;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.net.ServerSocket;
 import java.nio.channels.IllegalBlockingModeException;
 
 public class POP3Server {
+    private static Logger log = Logger.getLogger(POP3Server.class.getName());
     private static final String ERROR_INVALID_NUMBER_OF_ARGUMENTS = "An invalid number of arguments were specified. Usage: java Pop3Server port [timeout].";
     private static final String ERROR_INVALID_ARGUMENT = "An invalid argument was specified.";
     private static final String ERROR_INVALID_PORT = "An invalid port was specified. Port must be between 0 and 65535 inclusive.";
@@ -37,6 +39,7 @@ public class POP3Server {
     }
 
     public void run() {
+        log.info("Running server");
         serverRunning = true;
 
         /*
@@ -50,14 +53,27 @@ public class POP3Server {
                  * thread isn't needed as the Garbage Collector will clean it up
                  * after the client quits or the session times out.
                  */
-                new ServerThread(socket.accept(), timeout, window).start();
+
+                ServerThread serverThread = new ServerThread(socket.accept(), timeout, window);
+                serverThread.start();
+                Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                    log.info("Shutdown server");
+                    try {
+                        serverThread.interrupt();
+                        serverThread.join();
+                    }
+                    catch (InterruptedException e) {
+                        log.error(e.getMessage());
+                        log.trace(e.getStackTrace());
+                    }
+                }));
             }
         } catch (IOException | SecurityException | IllegalBlockingModeException
                 | IllegalArgumentException ex) {
-            System.err.println(ERROR_UNABLE_TO_ESTABLISH_SOCKET);
-            ex.printStackTrace();
+            log.error(ERROR_UNABLE_TO_ESTABLISH_SOCKET);
+            log.trace(ex.getStackTrace());
         } finally {
-            /* Close the database connection */
+            log.info("Closing DB connection");
             Database db = Database.getInstance();
             db.close();
             db = null;
