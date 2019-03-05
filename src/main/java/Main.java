@@ -27,7 +27,6 @@ public class Main extends Application{
     @Override
     public void start(Stage stage) throws Exception {
         log.info("Starting POP3 Server");
-        log.error("Check");
         Window window = new Window();
         stage.setTitle("POP3server");
         stage.setScene(window.getScene());
