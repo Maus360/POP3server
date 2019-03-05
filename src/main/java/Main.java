@@ -6,11 +6,12 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class Main extends Application{
     private static Logger log = Logger.getLogger("Main");
-    private final String PROPERTIES_PATH = "src/main/resources/server.properties";
+    private final String PROPERTIES_PATH = "server.properties";
     private static final String ERROR_INVALID_NUMBER_OF_ARGUMENTS = "An invalid number of arguments were specified. Usage: java Pop3Server port [timeout].";
     private static final String ERROR_INVALID_ARGUMENT = "An invalid argument was specified.";
     private static final String ERROR_INVALID_PORT = "An invalid port was specified. Port must be between 0 and 65535 inclusive.";
@@ -51,9 +52,10 @@ public class Main extends Application{
     public int readProperties() {
         log.info("Reading server properties");
         Properties properties = new Properties();
-        FileInputStream fis = null;
+        InputStream fis = null;
         try {
-            fis = new FileInputStream(PROPERTIES_PATH);
+            fis = this.getClass().getClassLoader()
+                    .getResourceAsStream(PROPERTIES_PATH);
             properties.load(fis);
         } catch (IOException e) {
             log.error("Failed reading server properties");

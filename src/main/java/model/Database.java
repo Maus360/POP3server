@@ -5,12 +5,13 @@ import org.apache.log4j.Logger;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 
 public class Database {
     private static Logger log = Logger.getLogger(Database.class.getName());
-    private final String PROPERTIES_PATH = "src/main/resources/database.properties";
+    private final String PROPERTIES_PATH = "database.properties";
     private Connection connection;
     private ResultSet resultSet;
     private PreparedStatement query;
@@ -96,7 +97,8 @@ public class Database {
     private Connection connectToDataBase() throws IOException, ClassNotFoundException, SQLException {
         log.info("Establishing connection to database...");
         Properties properties = new Properties();
-        FileInputStream fis = new FileInputStream(PROPERTIES_PATH);
+        InputStream fis = this.getClass().getClassLoader()
+                .getResourceAsStream(PROPERTIES_PATH);
         properties.load(fis);
         Class.forName(properties.getProperty("db_driver_class"));
         connection = DriverManager.getConnection(properties.getProperty("url"),
