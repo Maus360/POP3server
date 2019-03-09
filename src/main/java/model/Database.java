@@ -2,10 +2,7 @@ package model;
 
 import org.apache.log4j.Logger;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.*;
 import java.util.Properties;
 
@@ -97,8 +94,9 @@ public class Database {
     private Connection connectToDataBase() throws IOException, ClassNotFoundException, SQLException {
         log.info("Establishing connection to database...");
         Properties properties = new Properties();
-        InputStream fis = this.getClass().getClassLoader()
-                .getResourceAsStream(PROPERTIES_PATH);
+        File jarPath = new File(Database.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        String path = jarPath.getParentFile().getAbsolutePath();
+        FileInputStream fis = new FileInputStream(path + "/" + PROPERTIES_PATH);
         properties.load(fis);
         Class.forName(properties.getProperty("db_driver_class"));
         connection = DriverManager.getConnection(properties.getProperty("url"),

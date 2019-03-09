@@ -1,12 +1,13 @@
 import controller.POP3Server;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import view.Window;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public class Main extends Application{
@@ -26,6 +27,11 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage) throws Exception {
+        File jarPath = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        String path = jarPath.getParentFile().getAbsolutePath();
+        PropertyConfigurator propertyConfigurator = new PropertyConfigurator();
+        PropertyConfigurator.configureAndWatch(path + "/log4j.properties");
+
         log.info("Starting POP3 Server");
         Window window = new Window();
         stage.setTitle("POP3server");
@@ -51,10 +57,11 @@ public class Main extends Application{
     public int readProperties() {
         log.info("Reading server properties");
         Properties properties = new Properties();
-        InputStream fis = null;
+        FileInputStream fis = null;
         try {
-            fis = this.getClass().getClassLoader()
-                    .getResourceAsStream(PROPERTIES_PATH);
+            File jarPath = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            String path = jarPath.getParentFile().getAbsolutePath();
+            fis = new FileInputStream(path + "/" + PROPERTIES_PATH);
             properties.load(fis);
         } catch (IOException e) {
             log.error("Failed reading server properties");
